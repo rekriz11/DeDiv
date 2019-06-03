@@ -1,0 +1,99 @@
+## GRAMMAR ##
+Pairwise Agreement: 
+[92, 33]
+[0.736, 0.264]
+
+clustered/beam_search_bs100_kpercand3.json: 1.0
+clustered/clustering_beam_search_bs100_cbs5.json: 1.0
+clustered/diverse_beam_search_bs100_dbs0.8.json: 0.833
+clustered/iterative_beam_search_bs5_ibs100.json: 1.0
+clustered/random_sampling_temp0.5.json: 0.583
+clustered/random_sampling_temp0.7.json: 0.6
+clustered/random_sampling_temp1.0.json: 0.786
+clustered/random_sampling_temp1.0_top100.json: 0.75
+clustered/standard_beam_search_bs100.json: 1.0
+clustered/standard_beam_search_bs100_npad0.3.json: 0.8
+original/beam_search_bs10_kpercand3.json: 1.0
+original/clustering_beam_search_bs10_cbs5.json: 0.889
+original/diverse_beam_search_bs10_dbs0.8.json: 0.9
+original/iterative_beam_search_bs5_ibs10.json: 1.0
+original/random_sampling_temp0.5.json: 0.571
+original/random_sampling_temp0.7.json: 0.833
+original/random_sampling_temp1.0.json: 0.3
+original/random_sampling_temp1.0_top10.json: 0.583
+original/standard_beam_search_bs10.json: 0.909
+original/standard_beam_search_bs10_npad0.3.json: 0.6
+
+## COHERENCE ##
+Pairwise Agreement: 
+[75, 50]
+[0.6, 0.4]
+
+clustered/beam_search_bs100_kpercand3.json: 0.5
+clustered/clustering_beam_search_bs100_cbs5.json: 0.8
+clustered/diverse_beam_search_bs100_dbs0.8.json: 0.417
+clustered/iterative_beam_search_bs5_ibs100.json: 0.667
+clustered/random_sampling_temp0.5.json: 0.333
+clustered/random_sampling_temp0.7.json: 0.7
+clustered/random_sampling_temp1.0.json: 0.429
+clustered/random_sampling_temp1.0_top100.json: 0.438
+clustered/standard_beam_search_bs100.json: 0.5
+clustered/standard_beam_search_bs100_npad0.3.json: 0.7
+original/beam_search_bs10_kpercand3.json: 1.0
+original/clustering_beam_search_bs10_cbs5.json: 0.389
+original/diverse_beam_search_bs10_dbs0.8.json: 0.5
+original/iterative_beam_search_bs5_ibs10.json: 0.5
+original/random_sampling_temp0.5.json: 0.571
+original/random_sampling_temp0.7.json: 0.417
+original/random_sampling_temp1.0.json: 0.2
+original/random_sampling_temp1.0_top10.json: 0.083
+original/standard_beam_search_bs10.json: 0.5
+original/standard_beam_search_bs10_npad0.3.json: 0.5
+
+## INTERESTING ##
+Pairwise Agreement: 
+[64, 61]
+[0.512, 0.488]
+
+clustered/beam_search_bs100_kpercand3.json: 0.375
+clustered/clustering_beam_search_bs100_cbs5.json: 0.5
+clustered/diverse_beam_search_bs100_dbs0.8.json: 0.667
+clustered/iterative_beam_search_bs5_ibs100.json: 0.5
+clustered/random_sampling_temp0.5.json: 0.25
+clustered/random_sampling_temp0.7.json: 0.7
+clustered/random_sampling_temp1.0.json: 0.571
+clustered/random_sampling_temp1.0_top100.json: 0.5
+clustered/standard_beam_search_bs100.json: 0.167
+clustered/standard_beam_search_bs100_npad0.3.json: 0.5
+original/beam_search_bs10_kpercand3.json: 0.5
+original/clustering_beam_search_bs10_cbs5.json: 0.167
+original/diverse_beam_search_bs10_dbs0.8.json: 0.4
+original/iterative_beam_search_bs5_ibs10.json: 0.417
+original/random_sampling_temp0.5.json: 0.429
+original/random_sampling_temp0.7.json: 0.417
+original/random_sampling_temp1.0.json: 0.2
+original/random_sampling_temp1.0_top10.json: 0.583
+original/standard_beam_search_bs10.json: 0.5
+original/standard_beam_search_bs10_npad0.3.json: 0.5
+
+#### OVERALL STATS ####
+clustered/beam_search_bs100_kpercand3.json: 0.62
+clustered/clustering_beam_search_bs100_cbs5.json: 0.77
+clustered/diverse_beam_search_bs100_dbs0.8.json: 0.64
+clustered/iterative_beam_search_bs5_ibs100.json: 0.72
+clustered/random_sampling_temp0.5.json: 0.39
+clustered/random_sampling_temp0.7.json: 0.67
+clustered/random_sampling_temp1.0.json: 0.6
+clustered/random_sampling_temp1.0_top100.json: 0.56
+clustered/standard_beam_search_bs100.json: 0.56
+clustered/standard_beam_search_bs100_npad0.3.json: 0.67
+original/beam_search_bs10_kpercand3.json: 0.83
+original/clustering_beam_search_bs10_cbs5.json: 0.48
+original/diverse_beam_search_bs10_dbs0.8.json: 0.6
+original/iterative_beam_search_bs5_ibs10.json: 0.64
+original/random_sampling_temp0.5.json: 0.52
+original/random_sampling_temp0.7.json: 0.56
+original/random_sampling_temp1.0.json: 0.23
+original/random_sampling_temp1.0_top10.json: 0.42
+original/standard_beam_search_bs10.json: 0.64
+original/standard_beam_search_bs10_npad0.3.json: 0.53
