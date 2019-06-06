@@ -100,6 +100,7 @@ def main(opt):
   detokenize = MosesDetokenizer('en')
 
   all_results = {}
+  import pdb; pdb.set_trace()
   for json_file in glob.glob(os.path.join(opt.dir, '*.json')):
     with open(json_file, 'r') as f:
       try:
@@ -113,12 +114,13 @@ def main(opt):
 
       eval_results = []
 
-      for example in experiment['results']:
+      for example in experiment:
+      # for example in experiment['results']:
         candidates = example['pred']
 
         ex_results = {}
-        ex_results['dist_from_mean_emb'] = eval_emb_stats(
-            candidates, bc, detokenize)
+        # ex_results['dist_from_mean_emb'] = eval_emb_stats(
+            # candidates, bc, detokenize)
         ex_results['num_distinct_1grams'] = eval_distinct_k(candidates, 1)
         ex_results['num_distinct_2grams'] = eval_distinct_k(candidates, 2)
         ex_results['entropy_2grams'] = eval_entropy(candidates, 2)
@@ -130,8 +132,8 @@ def main(opt):
         eval_results.append(ex_results)
     
     all_results[exp_name] = {'ex_results': eval_results,
-                             'perplexity': experiment['ppl'],
-                             'score': experiment['score']}
+                             'perplexity': -1, #experiment.get('ppl', ''),
+                             'score': -1} #experiment.get('score', '')}
 
   per_experiment_keys = ['perplexity', 'score']
   per_example_keys = list(all_results[exp_name]['ex_results'][0].keys())
@@ -142,7 +144,9 @@ def main(opt):
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     writer.writeheader()
     
-    for exp_name, results in all_results.items():
+    exp_names = sorted(all_results.keys())
+    for exp_name in exp_names:
+      results = all_results[exp_name]
       csv_line = {'exp': exp_name}
 
       for key in per_experiment_keys:

@@ -13,11 +13,8 @@ import numpy as np
 import os
 
 
-def get_embs(candidates, normalize=False):
+def get_embs(candidates, bc, detokenize, normalize=False):
   """Returns the sequence embedding for each candidate."""
-
-  bc = BertClient()
-  detokenize = MosesDetokenizer('en')
 
   detoked_cands = []
   for i, cand in enumerate(candidates):
@@ -47,10 +44,11 @@ def remove_duplicates(candidates, scores):
   return new_candidates, new_scores
 
 
-def distance_filtering(candidates, scores, new_count, normalize_embs):
+def distance_filtering(
+    candidates, scores, new_count, normalize_embs, bc, detokenize):
   """Greedily take the furthest candidate from the ones taken so far."""
 
-  embs = get_embs(candidates, normalize_embs)
+  embs = get_embs(candidates, bc, detokenize, normalize_embs)
 
   # Take the most likely candidate a sthe first to keep.
   most_likely_cand_idx = np.argmin(scores)
@@ -74,10 +72,10 @@ def distance_filtering(candidates, scores, new_count, normalize_embs):
     return filtered_cands, filtered_scores
 
 
-def kmeans_filtering(candidates, scores, new_count, normalize_embs):
+def kmeans_filtering(candidates, scores, new_count, normalize_embs, bc, detokenize):
   """Take the most likely candidate from each cluster returned by kmeans."""
  
-  embs = get_embs(candidates, normalize_embs)
+  embs = get_embs(candidates, bc, detokenize, normalize_embs)
   kmeans = KMeans(n_clusters=new_count).fit(embs)
 
   filtered_cands = []
@@ -98,13 +96,14 @@ def kmeans_filtering(candidates, scores, new_count, normalize_embs):
   return filtered_cands, filtered_scores
 
 
-def kmeans_mod_filtering(candidates, scores, num_clusters, normalize_embs):
+def kmeans_mod_filtering(
+    candidates, scores, num_clusters, normalize_embs, bc, detokenize):
   """
   After initial k-means clustering, ignore clusters of size <= 2, and
   take top 2 candidates from largest clusters.
   """
 
-  embs = get_embs(candidates, normalize_embs)
+  embs = get_embs(candidates, bc, detokenize, normalize_embs)
   kmeans = KMeans(n_clusters=num_clusters).fit(embs)
 
   
@@ -153,6 +152,9 @@ def main(opt):
   if not os.path.exists(opt.output_dir):
     os.makedirs(opt.output_dir)
 
+  bc = BertClient()
+  detokenize = MosesDetokenizer('en')
+
   all_results = {}
   for json_file in glob.glob(os.path.join(opt.input_dir, '*.json')):
     out_json_file = os.path.join(opt.output_dir, os.path.basename(json_file))
@@ -168,7 +170,7 @@ def main(opt):
           print('Skipping it.')
           continue
 
-        for ex_num, example in enumerate(experiment['results']):
+        for ex_num, example in enumerate(experiment):
           if ex_num % 10 == 0:
             print("Clustering output: " + str(ex_num))
           
@@ -178,12 +180,13 @@ def main(opt):
 
           if opt.method == 'kmeans':
             candidates, scores = kmeans_filtering(
-                candidates, scores, opt.num_cands, True)
+                candidates, scores, opt.num_cands, True, bc, detokenize)
           elif opt.method == 'distance':
             candidates, scores = distance_filtering(
-                candidates, scores, opt.num_cands, False)
+                candidates, scores, opt.num_cands, False, bc, detokenize)
           elif opt.method == 'kmeans_mod':
-            candidates, scores = kmeans_mod_filtering(candidates, scores, opt.num_cands, True)
+            candidates, scores = kmeans_mod_filtering(
+                candidates, scores, opt.num_cands, True, bc, detokenize)
           else:
             raise ValueError('Not a valid filtering method')
 
@@ -209,7 +212,7 @@ if __name__ == '__main__':
             help='Directory to write out files.')
   group.add('--num_cands', type=int, default=10,
             help='The target number of candidates.')
-  group.add('--method', type=str, default='kmeans',
+  group.add('--method', type=str, default='kmeans_mod',
             help='One of [distance, kmeans, kmeans_mod].')
   opt = parser.parse_args()
 
