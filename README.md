@@ -13,8 +13,11 @@ python filter_top_scores.py \
 ```
 to first produce 100 diverse decodings from each method, and then narrow these down to 10 by taking the most likely.
 
-Run
-TODO: Explain how to run bert-as-service
+First clone [bert-as-service](https://github.com/hanxiao/bert-as-service), download the [uncased pre-trained model](https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip), and launch a server using:
+```
+bert-serving-start -model_dir /data1/embeddings/BERT/uncased_L-12_H-768_A-12/ -pooling_strategy REDUCE_MEAN_MAX -num_worker=4 -pooling_layer "-4" -max_seq_len 50
+```
+Then run:
 ```
 ./run_experiments.sh 100
 python filter_cluster_postprocessing.py \
@@ -26,7 +29,7 @@ python filter_cluster_postprocessing.py \
 to first produce 100 diverse decodings from each method, and then narrow these down to 10 each using clustering post-processing.
 
 # Instructions for running automatic evaluation.
-Run 
+Make sure a bert-as-service instance is running (see above section), and then run 
 ```
 python analyze_diversity.py -dir all_experiments/dialog/100to10decodes_withClustering
 python analyze_diversity.py -dir experiments/100to10decodes_withTopScores
