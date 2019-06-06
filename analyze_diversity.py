@@ -100,7 +100,6 @@ def main(opt):
   detokenize = MosesDetokenizer('en')
 
   all_results = {}
-  import pdb; pdb.set_trace()
   for json_file in glob.glob(os.path.join(opt.dir, '*.json')):
     with open(json_file, 'r') as f:
       try:

@@ -9,7 +9,7 @@ BATCH_SIZE="10"
 ROOT_DIR=".."
 TRANSLATE="${ROOT_DIR}/OpenNMT-daphne/translate.py" 
 SOURCE_FILE="eval_data/CMDB_prompt_subset.txt"
-OUTPUT_DIR="experiments/${NUM_DECODES}decodes"
+OUTPUT_DIR="all_experiments/dialog/${NUM_DECODES}decodes"
 # MODEL="${ROOT_DIR}/models/opensubtitles_2_6_t_given_s_acc_31.62_ppl_43.79_e10.pt" 
 MODEL="${ROOT_DIR}/models/opensubtitles_2_6_t_given_s_acc_32.66_ppl_38.81_e10.pt"
 SEED="666"
@@ -101,7 +101,7 @@ echo "Random sampling, temperature=1.0, sample from top 10."
 python3 "$TRANSLATE" \
 -model "$MODEL" \
 -src "$SOURCE_FILE" \
--output "${OUTPUT_DIR}/random_sampling_temp1.0_top"${NUM_DECODES}".json" \
+-output "${OUTPUT_DIR}/random_sampling_temp1.0_top10.json" \
 -beam_size 1 \
 -max_length 50 \
 -block_ngram_repeat 0 \

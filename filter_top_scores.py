@@ -1,3 +1,5 @@
+"""Filter the candidate outputs to the ones with highest likelihood score."""
+
 import glob
 import json
 import csv
@@ -12,18 +14,20 @@ import configargparse
 import numpy as np
 import os
 
-def remove_duplicates(candidates, scores, num_candidates):
-  # counter = collections.Counter(' '.join(c) for c in candidates)
+def filter_candidates(candidates, scores, num_candidates):
+  """Returns the num_candidates canadidates with the lowest scores."""
   new_candidates, new_scores = [], []
 
-  while len(new_candidates) < num_candidates:
-    max_ind = scores.index(max(scores))
-    if candidates[max_ind] not in new_candidates:
-      new_candidates.append(candidates[max_ind])
-      new_scores.append(scores[max_ind])
-    scores[max_ind] = -1e20
-  return new_candidates, new_scores
+  sorted_by_score = sorted(zip(candidates, scores),
+                           key=lambda x: x[1], reverse=True)
+  
+  for cand, score in sorted_by_score:
+    if cand not in new_candidates and len(cand) > 0 and len(new_candidates) < num_candidates:
+      new_candidates.append(cand)
+      new_scores.append(score)
 
+  assert len(new_candidates) == num_candidates
+  return new_candidates, new_scores
 
 
 def main(opt):
@@ -48,7 +52,7 @@ def main(opt):
         for ex_num, example in enumerate(experiment['results']):
           candidates = example['pred']
           scores = example['scores']
-          candidates, scores = remove_duplicates(candidates, scores, opt.num_cands)
+          candidates, scores = filter_candidates(candidates, scores, opt.num_cands)
 
           if ex_num < 3:
             print(candidates)

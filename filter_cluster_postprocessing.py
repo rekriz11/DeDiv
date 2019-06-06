@@ -1,3 +1,5 @@
+"""Filter the candidates by clustering them and then sampling from the clusters."""
+
 import glob
 import json
 import csv
@@ -34,7 +36,6 @@ def get_embs(candidates, bc, detokenize, normalize=False):
   return embs
 
 def remove_duplicates(candidates, scores):
-  # counter = collections.Counter(' '.join(c) for c in candidates)
   new_candidates = []
   new_scores = []
   for cand, score in zip(candidates, scores):
@@ -105,8 +106,6 @@ def kmeans_mod_filtering(
 
   embs = get_embs(candidates, bc, detokenize, normalize_embs)
   kmeans = KMeans(n_clusters=num_clusters).fit(embs)
-
-  
 
   r_clusters = []
 
