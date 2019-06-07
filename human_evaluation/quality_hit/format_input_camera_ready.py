@@ -118,7 +118,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
         cur_start = 0
         while cur_start < len(random_inds) - 1:
             hit = random_inds[cur_start:cur_start+5]
-            inputy = [input_current] + [preds_current[k] for k in hit] + [systems_current[k] for k in hit]
+            inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
             mturk_input[j].append(inputy)
             cur_start += 5
 
@@ -133,30 +133,34 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
     while min(current_hit_id) < len(mturk_input[0]):
         available_sents = [i for i in range(len(current_hit_id)) \
                              if current_hit_id[i] == min(current_hit_id)]
-        '''
-        if c < 3:
-            print(available_sents)
-        '''
         
         random.shuffle(available_sents)
-        current_sent_ids = available_sents[:5]
-
-        '''
-        ## Debug to make sure it's working
-        if c < 3:
-            print(current_sent_ids)
-        '''
+        current_sent_ids = available_sents[:3]
 
         row = []
         for i in current_sent_ids:
-            current_hit = mturk_input[i][current_hit_id[i]] + [i]
+            if i < 2:
+                current_hit = flatten(mturk_input[i][current_hit_id[i]]) + [i]
+            else:
+                hit = mturk_input[i][current_hit_id[i]]
+                control = gold_dict[hit[0]]
+                rand_ind = random.randint(0, 5)
+
+                ## Inserts control into hit
+                new_preds, new_systems = [], []
+                for j in range(len(hit[1])):
+                    if rand_ind == j:
+                        new_preds.append(control)
+                        new_systems.append("CONTROL")
+                    new_preds.append(hit[1][j])
+                    new_systems.append(hit[2][j])
+
+                current_hit = hit[0] + new_preds + new_systems + [i]
+                
+
             row += current_hit
             current_hit_id[i] += 1
-
-            '''
-            if c < 3:
-                print(current_hit)
-            '''
+                
 
         rows.append(row)
         c += 1
@@ -188,9 +192,7 @@ def output_csv(rows, output_file):
 
         firstrow = ['input1', 'sys11', 'sys12', 'sys13', 'sys14', 'sys15', 'sysid11', 'sysid12', 'sysid13', 'sysid14', 'sysid15', 'sentid1', \
                     'input2', 'sys21', 'sys22', 'sys23', 'sys24', 'sys25', 'sysid21', 'sysid22', 'sysid23', 'sysid24', 'sysid25', 'sentid2', \
-                    'input3', 'sys31', 'sys32', 'sys33', 'sys34', 'sys35', 'sysid31', 'sysid32', 'sysid33', 'sysid34', 'sysid35', 'sentid3', \
-                    'input4', 'sys41', 'sys42', 'sys43', 'sys44', 'sys45', 'sysid41', 'sysid42', 'sysid43', 'sysid44', 'sysid45', 'sentid4', \
-                    'input5', 'sys51', 'sys52', 'sys53', 'sys54', 'sys55', 'sysid51', 'sysid52', 'sysid53', 'sysid54', 'sysid55', 'sentid5']
+                    'input3', 'sys31', 'sys32', 'sys33', 'sys34', 'sys35', 'sys36', 'sysid31', 'sysid32', 'sysid33', 'sysid34', 'sysid35', 'sysid36', 'sentid3']
         csvwriter.writerow(firstrow)
         for row in rows:
             row_fixed = []
@@ -229,15 +231,8 @@ if __name__ == '__main__':
 
 '''
 python3 format_input_camera_ready.py \
-/data2/the_beamers/the_beamers_reno/experiments_joao_model2/10decodes/ \
-/data2/the_beamers/the_beamers_reno/experiments_joao_model2/100to10decodes/ \
-/data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset.txt \
-/data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset_responses.txt \
-input/input_joao_model2.csv
-
-python3 format_input_camera_ready.py \
-/data2/the_beamers/the_beamers_reno/experiments_joao_model2/10decodes/ \
-/data2/the_beamers/the_beamers_reno/experiments_joao_model2/100to10decodes/ \
+/data2/the_beamers/the_beamers_reno/all_experiments/dialog/10decodes/ \
+/data2/the_beamers/the_beamers_reno/all_experiments/dialog/100to10decodes/ \
 /data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset.txt \
 /data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset_responses.txt \
 input/input_camera_ready.csv
