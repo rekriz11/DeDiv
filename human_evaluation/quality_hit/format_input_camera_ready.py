@@ -25,6 +25,7 @@ def flatten(listoflists):
 def fix(listy, detokenize):
     for i in range(len(listy)):
         if listy[i] == 'i':
+            print(listy)
             listy[i] = "I"
             
     detok = detokenize(listy)
