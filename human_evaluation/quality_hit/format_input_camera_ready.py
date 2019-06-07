@@ -164,6 +164,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                 print(new_preds)
                 print(control_ind)
                 print(gold_dict[hit[0][0]])
+                a = b
                 
 
                 current_hit = hit[0] + new_preds + new_systems + [i]
