@@ -143,7 +143,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                 current_hit = flatten(mturk_input[i][current_hit_id[i]]) + [i]
             else:
                 hit = mturk_input[i][current_hit_id[i]]
-                control = gold_dict[hit[0]]
+                control = gold_dict[hit[0][0]]
                 rand_ind = random.randint(0, 5)
 
                 ## Inserts control into hit
@@ -230,9 +230,9 @@ if __name__ == '__main__':
 
 
 '''
-python3 human_eval/quality_hit/format_input_camera_ready.py \
+python3 human_evaluation/quality_hit/format_input_camera_ready.py \
 all_experiments/dialog/10decodes/ \
-all_experiments/dialog/100to10decodes/ \
+all_experiments/dialog/100to10decodes_withClustering/ \
 eval_data/CMDB_prompt_subset.txt \
 eval_data/CMDB_prompt_subset_responses.txt \
 human_eval/quality_hit/input/input_camera_ready.csv
