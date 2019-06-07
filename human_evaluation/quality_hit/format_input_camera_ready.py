@@ -23,7 +23,7 @@ def flatten(listoflists):
 
 ## Detokenize and fix weird contractions
 def fix(listy, detokenize):
-    detok = detokenize(listy).capitalize()
+    detok = detokenize(listy)
     fixed = str(detok)
 
     num_fixes = 0
@@ -43,9 +43,9 @@ def fix(listy, detokenize):
     fixed = fixed.replace(" a? ", "")
 
     if fixed != detok:
-        return fixed, 1
+        return fixed.capitalize(), 1
     else:
-        return fixed, 0
+        return fixed.capitalize(), 0
     
 
 # Load all json files
