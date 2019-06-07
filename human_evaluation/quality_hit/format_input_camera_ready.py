@@ -137,14 +137,13 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
     while min(current_hit_id) < len(mturk_input[0]):
         available_sents = [i for i in range(len(current_hit_id)) \
                              if current_hit_id[i] == min(current_hit_id)]
-        print(len(available_sents))
         
         random.shuffle(available_sents)
         current_sent_ids = available_sents[:2]
 
         row = []
-        for i in current_sent_ids:
-            if i == 0:
+        for index, i in enumerate(current_sent_ids):
+            if index == 0:
                 ## Do not include a control
                 current_hit = flatten(mturk_input[i][current_hit_id[i]]) + [i]
             else:
