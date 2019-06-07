@@ -15,7 +15,7 @@ to first produce 100 diverse decodings from each method, and then narrow these d
 
 First clone [bert-as-service](https://github.com/hanxiao/bert-as-service), download the [uncased pre-trained model](https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip), and launch a server using:
 ```
-bert-serving-start -model_dir /data1/embeddings/BERT/uncased_L-12_H-768_A-12/ -pooling_strategy REDUCE_MEAN_MAX -num_worker=4 -pooling_layer "-4" -max_seq_len 50
+bert-serving-start -model_dir /data1/embeddings/BERT/uncased_L-12_H-768_A-12/ -pooling_strategy REDUCE_MEAN_MAX -num_worker=2 -pooling_layer "-4" -max_seq_len 50
 ```
 Then run:
 ```
