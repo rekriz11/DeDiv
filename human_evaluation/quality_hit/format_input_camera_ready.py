@@ -230,10 +230,10 @@ if __name__ == '__main__':
 
 
 '''
-python3 format_input_camera_ready.py \
-/data2/the_beamers/the_beamers_reno/all_experiments/dialog/10decodes/ \
-/data2/the_beamers/the_beamers_reno/all_experiments/dialog/100to10decodes/ \
-/data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset.txt \
-/data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset_responses.txt \
-input/input_camera_ready.csv
+python3 human_eval/quality_hit/format_input_camera_ready.py \
+all_experiments/dialog/10decodes/ \
+all_experiments/dialog/100to10decodes/ \
+eval_data/CMDB_prompt_subset.txt \
+eval_data/CMDB_prompt_subset_responses.txt \
+human_eval/quality_hit/input/input_camera_ready.csv
 '''
