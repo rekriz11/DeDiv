@@ -23,6 +23,10 @@ def flatten(listoflists):
 
 ## Detokenize and fix weird contractions
 def fix(listy, detokenize):
+    if "i? l" in fixed:
+        c = True
+        print(fixed)
+        
     for i in range(len(listy)):
         if listy[i] == "i":
             listy[i] = "I"
@@ -38,6 +42,9 @@ def fix(listy, detokenize):
     starts = ["i", "you", "he", "they", "we", "I", "You", "He", "They", "We"]
     punctuation = ["!", "?", "."]
 
+    if c:
+        print(fixed)
+
     for s in starts:
         for p in punctuation:
             bad1 = s + p + " l"
@@ -45,6 +52,10 @@ def fix(listy, detokenize):
             
             bad2 = s + p + " e"
             fixed = fixed.replace(bad2, s + "'ve")
+
+    if c:
+        print(fixed)
+        print()
         
     fixed = fixed.replace("'r e", "'re")
     fixed = fixed.replace(" a? ", " ")
