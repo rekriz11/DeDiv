@@ -23,7 +23,7 @@ def flatten(listoflists):
 
 ## Detokenize and fix weird contractions
 def fix(listy, detokenize):
-    detok = capitalize(detokenize(listy))
+    detok = detokenize(listy).capitalize()
     fixed = str(detok)
 
     num_fixes = 0
