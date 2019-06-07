@@ -24,7 +24,7 @@ def flatten(listoflists):
 ## Detokenize and fix weird contractions
 def fix(listy, detokenize):
     for i in range(len(listy)):
-        if listy[i] == 'i':
+        if listy[i] == "i":
             listy[i] = "I"
         elif i > 0 and listy[i-1] in [".", "?", "!"]:
             listy[i] = listy[i].capitalize()
@@ -35,7 +35,7 @@ def fix(listy, detokenize):
 
     num_fixes = 0
 
-    starts = ["I", "you", "he", "they", "we", "You", "He", "They", "We"]
+    starts = ["i", "you", "he", "they", "we", "I", "You", "He", "They", "We"]
     punctuation = ["!", "?", "."]
 
     for s in starts:
