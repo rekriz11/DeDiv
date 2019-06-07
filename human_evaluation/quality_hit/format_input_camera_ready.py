@@ -160,6 +160,12 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
 
                     new_preds.append(hit[1][j])
                     new_systems.append(hit[2][j])
+
+                ## Adds control at the end if necessary
+                if control_ind == len(hit[1]):
+                    new_preds.append(control)
+                    new_systems.append("CONTROL")
+                    
                 '''
                 print(new_preds)
                 print(control_ind)
