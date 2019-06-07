@@ -180,11 +180,13 @@ def get_gold_responses(input_file, gold_output_file, detokenize):
     inputs, outputs = [], []
     with open(input_file, 'r', encoding='utf8') as f:
         for line in f:
-            inputs.append(fix(line.strip().split(" "), detokenize))
+            detok, b = fix(line.strip().split(" "), detokenize)
+            inputs.append(detok)
 
     with open(gold_output_file, 'r', encoding='utf8') as f:
         for line in f:
-            outputs.append(fix(line.strip().split(" "), detokenize))
+            detok, b = fix(line.strip().split(" "), detokenize)
+            outputs.append(detok)
 
     gold_dict = dict()
     for i, inp in enumerate(inputs):
