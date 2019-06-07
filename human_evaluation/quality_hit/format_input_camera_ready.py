@@ -50,18 +50,22 @@ def fix(listy, detokenize):
     
 
 # Load all json files
-def load_directory(dir1, dir2, detokenize):    
+def load_directory(dir1, dir2, dir3, detokenize):    
     files1 = get_all_files(dir1)
     paths1 = [dir1 + "/" + file for file in files1]
 
     files2 = get_all_files(dir2)
     paths2 = [dir2 + "/" + file for file in files2]
 
-    files1 = ["original/" + f for f in files1]
-    files2 = ["clustered/" + f for f in files2]
+    files3 = get_all_files(dir3)
+    paths3 = [dir3 + "/" + file for file in files3]
 
-    filepaths = paths1 + paths2
-    files = files1 + files2
+    files1 = ["original10/" + f for f in files1]
+    files2 = ["clustered/" + f for f in files2]
+    files3 = ["original100/" + f for f in files2]
+
+    filepaths = paths1 + paths2 + paths3
+    files = files1 + files2 + files3
 
     num_fixes = 0
     inputs, preds, scores, systems = [], [], [], []
@@ -172,7 +176,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
         rows.append(row)
         c += 1
     
-    #print(len(rows))
+    print(len(rows))
     return rows
 
 ## Gets gold responses
@@ -212,11 +216,11 @@ def output_csv(rows, output_file):
                     row_fixed.append(r)
             csvwriter.writerow(row_fixed)
 
-def main(system_outputs_folder, clustered_outputs_folder, input_file, gold_output_file, output_file):
+def main(system_outputs_folder, clustered_outputs_folder, 100_outputs_folder, input_file, gold_output_file, output_file):
     random.seed(37)
     detokenize = MosesDetokenizer('en')
     ## Gets predicted responses from all systems
-    inputs, preds, scores, systems = load_directory(system_outputs_folder, clustered_outputs_folder, detokenize)
+    inputs, preds, scores, systems = load_directory(system_outputs_folder, clustered_outputs_folder, 100_outputs_folder, detokenize)
 
     ## Gets gold responses
     gold_dict = get_gold_responses(input_file, gold_output_file, detokenize)
@@ -242,7 +246,8 @@ if __name__ == '__main__':
 python3 human_evaluation/quality_hit/format_input_camera_ready.py \
 all_experiments/dialog/10decodes/ \
 all_experiments/dialog/100to10decodes_withClustering/ \
+all_experiments/dialog/100to10decodes_withTopScores/ \
 eval_data/CMDB_prompt_subset.txt \
 eval_data/CMDB_prompt_subset_responses.txt \
-human_eval/quality_hit/input/input_camera_ready.csv
+human_evaluation/quality_hit/input/input_camera_ready.csv
 '''
