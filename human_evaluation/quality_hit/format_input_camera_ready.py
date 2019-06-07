@@ -40,7 +40,7 @@ def fix(listy, detokenize):
             fixed = fixed.replace(bad2, s + "'ve")
         
     fixed = fixed.replace("'r e", "'re")
-    fixed = fixed.replace(" a? ", "")
+    fixed = fixed.replace(" a? ", " ")
 
     if fixed != detok:
         return fixed.capitalize(), 1
