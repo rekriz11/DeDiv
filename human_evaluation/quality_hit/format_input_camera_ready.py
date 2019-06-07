@@ -23,6 +23,7 @@ def flatten(listoflists):
 
 ## Detokenize and fix weird contractions
 def fix(listy, detokenize):
+    c = False
     if "i? l" in " ".join(listy):
         c = True
         print(" ".join(listy))
