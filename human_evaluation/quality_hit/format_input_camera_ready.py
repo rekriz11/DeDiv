@@ -216,11 +216,11 @@ def output_csv(rows, output_file):
                     row_fixed.append(r)
             csvwriter.writerow(row_fixed)
 
-def main(system_outputs_folder, clustered_outputs_folder, 100_outputs_folder, input_file, gold_output_file, output_file):
+def main(system_outputs_folder, clustered_outputs_folder, outputs_folder_100, input_file, gold_output_file, output_file):
     random.seed(37)
     detokenize = MosesDetokenizer('en')
     ## Gets predicted responses from all systems
-    inputs, preds, scores, systems = load_directory(system_outputs_folder, clustered_outputs_folder, 100_outputs_folder, detokenize)
+    inputs, preds, scores, systems = load_directory(system_outputs_folder, clustered_outputs_folder, outputs_folder_100, detokenize)
 
     ## Gets gold responses
     gold_dict = get_gold_responses(input_file, gold_output_file, detokenize)
@@ -235,11 +235,12 @@ def main(system_outputs_folder, clustered_outputs_folder, 100_outputs_folder, in
 if __name__ == '__main__':
     system_outputs_folder = sys.argv[1]
     clustered_outputs_folder = sys.argv[2]
-    input_file = sys.argv[3]
-    gold_output_file = sys.argv[4]
-    output_file = sys.argv[5]
+    outputs_folder_100 = sys.argv[3]
+    input_file = sys.argv[4]
+    gold_output_file = sys.argv[5]
+    output_file = sys.argv[6]
     
-    main(system_outputs_folder, clustered_outputs_folder, input_file, gold_output_file, output_file)
+    main(system_outputs_folder, clustered_outputs_folder, outputs_folder_100, input_file, gold_output_file, output_file)
 
 
 '''
