@@ -201,7 +201,7 @@ def output_csv(rows, output_file):
         csvwriter = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
 
         firstrow = ['input1', 'sys11', 'sys12', 'sys13', 'sys14', 'sys15', 'sysid11', 'sysid12', 'sysid13', 'sysid14', 'sysid15', 'sentid1', \
-                    'input2', 'sys21', 'sys22', 'sys23', 'sys24', 'sys25', 'sys26', 'sysid21', 'sysid22', 'sysid23', 'sysid24', 'sysid25', 'sysid26', 'sentid2', \
+                    'input2', 'sys21', 'sys22', 'sys23', 'sys24', 'sys25', 'sys26', 'sysid21', 'sysid22', 'sysid23', 'sysid24', 'sysid25', 'sysid26', 'sentid2']
         csvwriter.writerow(firstrow)
         for row in rows:
             row_fixed = []
