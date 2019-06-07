@@ -137,6 +137,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
     while min(current_hit_id) < len(mturk_input[0]):
         available_sents = [i for i in range(len(current_hit_id)) \
                              if current_hit_id[i] == min(current_hit_id)]
+        print(len(available_sents))
         
         random.shuffle(available_sents)
         current_sent_ids = available_sents[:3]
@@ -144,17 +145,12 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
         row = []
         for i in current_sent_ids:
             if i < 2:
+                ## Do not include a control
                 current_hit = flatten(mturk_input[i][current_hit_id[i]]) + [i]
             else:
+                ## Gets controls
                 hit = mturk_input[i][current_hit_id[i]]
-                try:
-                    control = gold_dict[hit[0][0]]
-                except KeyError:
-                    print(hit[0][0])
-                    print()
-                    for k in list(gold_dict.keys()):
-                        print(k)
-                    a = b
+                control = gold_dict[hit[0][0]]
                 rand_ind = random.randint(0, 5)
 
                 ## Inserts control into hit
@@ -175,7 +171,8 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
 
         rows.append(row)
         c += 1
-    
+
+    print("Number of HITs:")
     print(len(rows))
     return rows
 
