@@ -24,9 +24,9 @@ def flatten(listoflists):
 ## Detokenize and fix weird contractions
 def fix(listy, detokenize):
     c = False
-    if "i? l" in " ".join(listy):
+    if "i? l" in detokenize(listy):
         c = True
-        print(" ".join(listy))
+        print(detokenize(listy))
         
     for i in range(len(listy)):
         if listy[i] == "i":
@@ -35,7 +35,7 @@ def fix(listy, detokenize):
             listy[i] = listy[i].capitalize()
 
     if c:
-        print(" ".join(listy))
+        print(detokenize(listy))
             
             
     detok = detokenize(listy)
