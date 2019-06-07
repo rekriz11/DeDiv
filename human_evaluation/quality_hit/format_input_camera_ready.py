@@ -23,7 +23,7 @@ def flatten(listoflists):
 
 ## Detokenize and fix weird contractions
 def fix(listy, detokenize):
-    detok = detokenize(listy)
+    detok = capitalize(detokenize(listy))
     fixed = str(detok)
 
     num_fixes = 0
@@ -40,8 +40,7 @@ def fix(listy, detokenize):
             fixed = fixed.replace(bad2, s + "'ve")
         
     fixed = fixed.replace("'r e", "'re")
-
-    
+    fixed = fixed.replace(" a? ", "")
 
     if fixed != detok:
         return fixed, 1
@@ -62,7 +61,7 @@ def load_directory(dir1, dir2, dir3, detokenize):
 
     files1 = ["original10/" + f for f in files1]
     files2 = ["clustered/" + f for f in files2]
-    files3 = ["original100/" + f for f in files2]
+    files3 = ["original100/" + f for f in files3]
 
     filepaths = paths1 + paths2 + paths3
     files = files1 + files2 + files3
