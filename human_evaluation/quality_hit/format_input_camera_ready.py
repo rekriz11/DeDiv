@@ -149,16 +149,22 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                 ## Gets controls
                 hit = mturk_input[i][current_hit_id[i]]
                 control = gold_dict[hit[0][0]]
-                rand_ind = random.randint(0, 5)
+                control_ind = random.randint(0, 5)
 
                 ## Inserts control into hit
                 new_preds, new_systems = [], []
                 for j in range(len(hit[1])):
-                    if rand_ind == j:
+                    if control_ind == j:
                         new_preds.append(control)
                         new_systems.append("CONTROL")
+
                     new_preds.append(hit[1][j])
                     new_systems.append(hit[2][j])
+
+                print(new_preds)
+                print(control_ind)
+                print(gold_dict[hit[0][0]])
+                
 
                 current_hit = hit[0] + new_preds + new_systems + [i]
                 
