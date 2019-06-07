@@ -140,11 +140,11 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
         print(len(available_sents))
         
         random.shuffle(available_sents)
-        current_sent_ids = available_sents[:3]
+        current_sent_ids = available_sents[:2]
 
         row = []
         for i in current_sent_ids:
-            if i < 2:
+            if i == 0:
                 ## Do not include a control
                 current_hit = flatten(mturk_input[i][current_hit_id[i]]) + [i]
             else:
