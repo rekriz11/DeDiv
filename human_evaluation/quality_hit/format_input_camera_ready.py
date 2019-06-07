@@ -143,7 +143,14 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                 current_hit = flatten(mturk_input[i][current_hit_id[i]]) + [i]
             else:
                 hit = mturk_input[i][current_hit_id[i]]
-                control = gold_dict[hit[0][0]]
+                try:
+                    control = gold_dict[hit[0][0]]
+                except KeyError:
+                    print(hit[0][0])
+                    print()
+                    for k in list(gold_dict.keys()):
+                        print(k)
+                    a = b
                 rand_ind = random.randint(0, 5)
 
                 ## Inserts control into hit
