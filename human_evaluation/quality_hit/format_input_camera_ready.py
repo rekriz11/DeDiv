@@ -23,6 +23,10 @@ def flatten(listoflists):
 
 ## Detokenize and fix weird contractions
 def fix(listy, detokenize):
+    for i in range(len(listy)):
+        if listy[i] == 'i':
+            listy[i].capitalize()
+            
     detok = detokenize(listy)
     fixed = str(detok)
 
@@ -41,6 +45,11 @@ def fix(listy, detokenize):
         
     fixed = fixed.replace("'r e", "'re")
     fixed = fixed.replace(" a? ", " ")
+
+    if fixed[-1] not in [".", "!", "?"]:
+        fixed = fixed + "."
+
+    
 
     if fixed != detok:
         return fixed.capitalize(), 1
