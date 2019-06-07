@@ -163,6 +163,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
 
                 print(new_preds)
                 print(control_ind)
+                print(hit[0][0])
                 print(gold_dict[hit[0][0]])
                 a = b
                 
