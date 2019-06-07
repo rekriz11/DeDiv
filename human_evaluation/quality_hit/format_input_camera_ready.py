@@ -32,7 +32,7 @@ def fix(listy, detokenize):
 
     num_fixes = 0
 
-    starts = ["i", "you", "he", "they", "we"]
+    starts = ["I", "you", "he", "they", "we"]
     punctuation = ["!", "?", "."]
 
     for s in starts:
