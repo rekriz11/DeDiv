@@ -142,7 +142,10 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                     inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
                     task_temp.append(inputy)
                     cur_start += 5
-                elif len(list(set([preds_current[k] for k in hit]))) == 4 and num_shuffles >= 5000: 
+                elif len(list(set([preds_current[k] for k in hit]))) == 4 and num_shuffles >= 5000:
+                    inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
+                    task_temp.append(inputy)
+                    cur_start += 5
                 ## Otherwise, shuffle and try again
                 else:
                     '''
