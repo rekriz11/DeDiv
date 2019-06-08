@@ -141,8 +141,10 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                     cur_start += 5
                 ## Otherwise, shuffle and try again
                 else:
+                    '''
                     print([preds_current[k] for k in hit])
                     print()
+                    '''
 
                     random.shuffle(random_inds)
                     break
