@@ -127,12 +127,29 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
         random_inds = [k for k in range(len(preds_current))]
         random.shuffle(random_inds)
 
-        cur_start = 0
-        while cur_start < len(random_inds) - 1:
-            hit = random_inds[cur_start:cur_start+5]
-            inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
-            mturk_input[j].append(inputy)
-            cur_start += 5
+        shuffled = False
+        while not shuffled:
+            task_temp = []
+            cur_start = 0
+            while cur_start < len(random_inds) - 1:
+                hit = random_inds[cur_start:cur_start+5]
+
+                ## Checks to make sure all prompts in a set of 5 are unique
+                if len(list(set([preds_current[k] for k in hit]))) == 5: 
+                    inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
+                    task_temp.append(inputy)
+                    cur_start += 5
+                ## Otherwise, shuffle and try again
+                else:
+                    print([preds_current[k] for k in hit])
+                    print()
+
+                    random.shuffle(random_inds)
+                    break
+
+            if len(task_temp) == len(random_inds):
+                mturk_input[j] = task_temp
+                shuffled = True
 
     print("NUMBER OF TASKS: ")
     print(len(mturk_input))
