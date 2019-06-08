@@ -152,7 +152,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                     random.shuffle(random_inds)
                     break
 
-            if len(task_temp) == len(random_inds):
+            if cur_start >= len(random_inds) - 1:
                 mturk_input[j] = task_temp
                 shuffled = True
 
