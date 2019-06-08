@@ -131,6 +131,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
 
         shuffled = False
         num_shuffles = 0
+        num_bads = 0
         while not shuffled:
             task_temp = []
             cur_start = 0
@@ -142,10 +143,12 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                     inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
                     task_temp.append(inputy)
                     cur_start += 5
-                elif len(list(set([preds_current[k] for k in hit]))) == 4 and num_shuffles >= 5000:
+                elif len(list(set([preds_current[k] for k in hit]))) == 4 and num_shuffles >= 10000:
                     inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
                     task_temp.append(inputy)
                     cur_start += 5
+                    num_bads += 1
+                    
                 ## Otherwise, shuffle and try again
                 else:
                     '''
@@ -160,6 +163,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                 mturk_input[j] = task_temp
                 shuffled = True
 
+    print("NUMBER OF NOT-PERFECTLY UNIQUE TASKS: " + str(num_bads))
     print("NUMBER OF TASKS: ")
     print(len(mturk_input))
     print(sum([len(m) for m in mturk_input]))
