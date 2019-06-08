@@ -147,6 +147,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
                     print([preds_current[k] for k in hit])
                     print()
                     '''
+                    print(len(task_temp))
 
                     random.shuffle(random_inds)
                     break
