@@ -116,7 +116,7 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
     mturk_input = [[] for i in range(len(inputs[0]))]
     
     for j in range(len(inputs[0])):
-        print(j)
+        print("PROMPT: " + str(j))
         
         input_current = inputs[0][j]
         preds_current = []
