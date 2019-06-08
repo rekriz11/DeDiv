@@ -22,13 +22,17 @@ def flatten(listoflists):
     return list
 
 ## Detokenize and fix weird contractions
-def fix(listy, detokenize):
+def fix(listy, detokenize):        
+    for i in range(len(listy)):
+        if listy[i] == "i":
+            listy[i] = "I"            
+            
     detok = detokenize(listy)
     fixed = str(detok)
 
     num_fixes = 0
 
-    starts = ["i", "you", "he", "they", "we"]
+    starts = ["i", "you", "he", "they", "we", "I", "You", "He", "They", "We"]
     punctuation = ["!", "?", "."]
 
     for s in starts:
@@ -38,30 +42,38 @@ def fix(listy, detokenize):
             
             bad2 = s + p + " e"
             fixed = fixed.replace(bad2, s + "'ve")
-        
+
     fixed = fixed.replace("'r e", "'re")
+    fixed = fixed.replace(" a? ", " ")
+
+    if fixed[-1] not in [".", "!", "?"]:
+        fixed = fixed + "."
 
     
 
     if fixed != detok:
-        return fixed, 1
+        return fixed.capitalize(), 1
     else:
-        return fixed, 0
+        return fixed.capitalize(), 0
     
 
 # Load all json files
-def load_directory(dir1, dir2, detokenize):    
+def load_directory(dir1, dir2, dir3, detokenize):    
     files1 = get_all_files(dir1)
     paths1 = [dir1 + "/" + file for file in files1]
 
     files2 = get_all_files(dir2)
     paths2 = [dir2 + "/" + file for file in files2]
 
-    files1 = ["original/" + f for f in files1]
-    files2 = ["clustered/" + f for f in files2]
+    files3 = get_all_files(dir3)
+    paths3 = [dir3 + "/" + file for file in files3]
 
-    filepaths = paths1 + paths2
-    files = files1 + files2
+    files1 = ["original10/" + f for f in files1]
+    files2 = ["clustered/" + f for f in files2]
+    files3 = ["original100/" + f for f in files3]
+
+    filepaths = paths1 + paths2 + paths3
+    files = files1 + files2 + files3
 
     num_fixes = 0
     inputs, preds, scores, systems = [], [], [], []
@@ -104,6 +116,8 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
     mturk_input = [[] for i in range(len(inputs[0]))]
     
     for j in range(len(inputs[0])):
+        print("PROMPT: " + str(j))
+        
         input_current = inputs[0][j]
         preds_current = []
         systems_current = []
@@ -115,13 +129,41 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
         random_inds = [k for k in range(len(preds_current))]
         random.shuffle(random_inds)
 
-        cur_start = 0
-        while cur_start < len(random_inds) - 1:
-            hit = random_inds[cur_start:cur_start+5]
-            inputy = [input_current] + [preds_current[k] for k in hit] + [systems_current[k] for k in hit]
-            mturk_input[j].append(inputy)
-            cur_start += 5
+        shuffled = False
+        num_shuffles = 0
+        num_bads = 0
+        while not shuffled:
+            task_temp = []
+            cur_start = 0
+            while cur_start < len(random_inds) - 1:
+                hit = random_inds[cur_start:cur_start+5]
 
+                ## Checks to make sure all prompts in a set of 5 are unique
+                if len(list(set([preds_current[k] for k in hit]))) == 5: 
+                    inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
+                    task_temp.append(inputy)
+                    cur_start += 5
+                elif len(list(set([preds_current[k] for k in hit]))) == 4 and num_shuffles >= 10000:
+                    inputy = [[input_current], [preds_current[k] for k in hit], [systems_current[k] for k in hit]]
+                    task_temp.append(inputy)
+                    cur_start += 5
+                    num_bads += 1
+                    
+                ## Otherwise, shuffle and try again
+                else:
+                    '''
+                    print([preds_current[k] for k in hit])
+                    print()
+                    '''
+                    random.shuffle(random_inds)
+                    num_shuffles += 1
+                    break
+
+            if cur_start >= len(random_inds) - 1:
+                mturk_input[j] = task_temp
+                shuffled = True
+
+    print("NUMBER OF NOT-PERFECTLY UNIQUE TASKS: " + str(num_bads))
     print("NUMBER OF TASKS: ")
     print(len(mturk_input))
     print(sum([len(m) for m in mturk_input]))
@@ -133,35 +175,58 @@ def make_rows(inputs, preds, scores, systems, gold_dict):
     while min(current_hit_id) < len(mturk_input[0]):
         available_sents = [i for i in range(len(current_hit_id)) \
                              if current_hit_id[i] == min(current_hit_id)]
-        '''
-        if c < 3:
-            print(available_sents)
-        '''
         
         random.shuffle(available_sents)
-        current_sent_ids = available_sents[:5]
-
-        '''
-        ## Debug to make sure it's working
-        if c < 3:
-            print(current_sent_ids)
-        '''
+        current_sent_ids = available_sents[:2]
 
         row = []
-        for i in current_sent_ids:
-            current_hit = mturk_input[i][current_hit_id[i]] + [i]
+        for index, i in enumerate(current_sent_ids):
+            if index == 0:
+                ## Do not include a control
+                current_hit = flatten(mturk_input[i][current_hit_id[i]]) + [i]
+            else:
+                ## Gets controls
+                hit = mturk_input[i][current_hit_id[i]]
+                control = gold_dict[hit[0][0]]
+                control_ind = random.randint(0, 5)
+
+                ## Inserts control into hit
+                new_preds, new_systems = [], []
+                for j in range(len(hit[1])):
+                    if control_ind == j:
+                        new_preds.append(control)
+                        new_systems.append("CONTROL")
+
+                    new_preds.append(hit[1][j])
+                    new_systems.append(hit[2][j])
+
+                ## Adds control at the end if necessary
+                if control_ind == len(hit[1]):
+                    new_preds.append(control)
+                    new_systems.append("CONTROL")
+                    
+                '''
+                print(new_preds)
+                print(control_ind)
+                print(hit[0][0])
+                print(gold_dict[hit[0][0]])
+                print(row)
+                a = b
+                '''
+                
+
+                current_hit = hit[0] + new_preds + new_systems + [i]
+                
+
             row += current_hit
             current_hit_id[i] += 1
-
-            '''
-            if c < 3:
-                print(current_hit)
-            '''
+                
 
         rows.append(row)
         c += 1
-    
-    #print(len(rows))
+
+    print("Number of HITs:")
+    print(len(rows))
     return rows
 
 ## Gets gold responses
@@ -169,11 +234,13 @@ def get_gold_responses(input_file, gold_output_file, detokenize):
     inputs, outputs = [], []
     with open(input_file, 'r', encoding='utf8') as f:
         for line in f:
-            inputs.append(fix(line.strip().split(" "), detokenize))
+            detok, b = fix(line.strip().split(" "), detokenize)
+            inputs.append(detok)
 
     with open(gold_output_file, 'r', encoding='utf8') as f:
         for line in f:
-            outputs.append(fix(line.strip().split(" "), detokenize))
+            detok, b = fix(line.strip().split(" "), detokenize)
+            outputs.append(detok)
 
     gold_dict = dict()
     for i, inp in enumerate(inputs):
@@ -187,10 +254,7 @@ def output_csv(rows, output_file):
         csvwriter = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
 
         firstrow = ['input1', 'sys11', 'sys12', 'sys13', 'sys14', 'sys15', 'sysid11', 'sysid12', 'sysid13', 'sysid14', 'sysid15', 'sentid1', \
-                    'input2', 'sys21', 'sys22', 'sys23', 'sys24', 'sys25', 'sysid21', 'sysid22', 'sysid23', 'sysid24', 'sysid25', 'sentid2', \
-                    'input3', 'sys31', 'sys32', 'sys33', 'sys34', 'sys35', 'sysid31', 'sysid32', 'sysid33', 'sysid34', 'sysid35', 'sentid3', \
-                    'input4', 'sys41', 'sys42', 'sys43', 'sys44', 'sys45', 'sysid41', 'sysid42', 'sysid43', 'sysid44', 'sysid45', 'sentid4', \
-                    'input5', 'sys51', 'sys52', 'sys53', 'sys54', 'sys55', 'sysid51', 'sysid52', 'sysid53', 'sysid54', 'sysid55', 'sentid5']
+                    'input2', 'sys21', 'sys22', 'sys23', 'sys24', 'sys25', 'sys26', 'sysid21', 'sysid22', 'sysid23', 'sysid24', 'sysid25', 'sysid26', 'sentid2']
         csvwriter.writerow(firstrow)
         for row in rows:
             row_fixed = []
@@ -201,11 +265,11 @@ def output_csv(rows, output_file):
                     row_fixed.append(r)
             csvwriter.writerow(row_fixed)
 
-def main(system_outputs_folder, clustered_outputs_folder, input_file, gold_output_file, output_file):
+def main(system_outputs_folder, clustered_outputs_folder, outputs_folder_100, input_file, gold_output_file, output_file):
     random.seed(37)
     detokenize = MosesDetokenizer('en')
     ## Gets predicted responses from all systems
-    inputs, preds, scores, systems = load_directory(system_outputs_folder, clustered_outputs_folder, detokenize)
+    inputs, preds, scores, systems = load_directory(system_outputs_folder, clustered_outputs_folder, outputs_folder_100, detokenize)
 
     ## Gets gold responses
     gold_dict = get_gold_responses(input_file, gold_output_file, detokenize)
@@ -220,25 +284,20 @@ def main(system_outputs_folder, clustered_outputs_folder, input_file, gold_outpu
 if __name__ == '__main__':
     system_outputs_folder = sys.argv[1]
     clustered_outputs_folder = sys.argv[2]
-    input_file = sys.argv[3]
-    gold_output_file = sys.argv[4]
-    output_file = sys.argv[5]
+    outputs_folder_100 = sys.argv[3]
+    input_file = sys.argv[4]
+    gold_output_file = sys.argv[5]
+    output_file = sys.argv[6]
     
-    main(system_outputs_folder, clustered_outputs_folder, input_file, gold_output_file, output_file)
+    main(system_outputs_folder, clustered_outputs_folder, outputs_folder_100, input_file, gold_output_file, output_file)
 
 
 '''
-python3 format_input_camera_ready.py \
-/data2/the_beamers/the_beamers_reno/experiments_joao_model2/10decodes/ \
-/data2/the_beamers/the_beamers_reno/experiments_joao_model2/100to10decodes/ \
-/data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset.txt \
-/data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset_responses.txt \
-input/input_joao_model2.csv
-
-python3 format_input_camera_ready.py \
-/data2/the_beamers/the_beamers_reno/experiments_joao_model2/10decodes/ \
-/data2/the_beamers/the_beamers_reno/experiments_joao_model2/100to10decodes/ \
-/data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset.txt \
-/data2/the_beamers/the_beamers_reno/eval_data/CMDB_prompt_subset_responses.txt \
-input/input_camera_ready.csv
+python3 human_evaluation/quality_hit/format_input_camera_ready.py \
+all_experiments/dialog/10decodes/ \
+all_experiments/dialog/100to10decodes_withClustering/ \
+all_experiments/dialog/100to10decodes_withTopScores/ \
+eval_data/CMDB_prompt_subset.txt \
+eval_data/CMDB_prompt_subset_responses.txt \
+human_evaluation/quality_hit/input/input_camera_ready.csv
 '''
