@@ -113,9 +113,20 @@ def main(opt):
 
       eval_results = []
 
-      for example in experiment:
-      # for example in experiment['results']:
+      # Dialog json has a field named results, while image captioning does not.
+      # Handle both.
+      outputs = experiment.get('results', experiment)
+
+      #Used to compute overall perplexity.
+      score_sum = 0
+      num_words = 0
+
+      for example in outputs:
         candidates = example['pred']
+        scores = example['scores']
+
+        score_sum += np.sum(scores)
+        num_words += np.sum(len(c) for c in candidates)
 
         ex_results = {}
         # ex_results['dist_from_mean_emb'] = eval_emb_stats(
@@ -131,10 +142,13 @@ def main(opt):
         eval_results.append(ex_results)
     
     all_results[exp_name] = {'ex_results': eval_results,
-                             'perplexity': -1, #experiment.get('ppl', ''),
-                             'score': -1} #experiment.get('score', '')}
+                             'recomputed_perplexity': np.exp(-score_sum / num_words),
+                             'recomputed_score': score_sum / num_words,
+                             'original_perplexity': experiment.get('ppl', -1),
+                             'original_score': experiment.get('score', -1)}
 
-  per_experiment_keys = ['perplexity', 'score']
+  per_experiment_keys = [  'original_perplexity',   'original_score',
+                         'recomputed_perplexity', 'recomputed_score']
   per_example_keys = list(all_results[exp_name]['ex_results'][0].keys())
 
   outfile = os.path.join(opt.dir, 'results.csv')
