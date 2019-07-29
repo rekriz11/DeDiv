@@ -1,8 +1,31 @@
-# the_beamers
-All experiments and evaluation code for decoding diversity project!
+# Code for "Comparison of Diverse Decoding Methods from Conditional Language Models"
 
-# Instructions for running diverse decoding experiments.
-Set the vars at the top of `run_experiments.sh` appropriately to refer to where OpenNMT-py and your model checkpoint are stored.
+Please cite 
+```
+@inproceedings{ippolito-etal-2019-comparison,
+    title = "Comparison of Diverse Decoding Methods from Conditional Language Models",
+    author = "Ippolito, Daphne  and
+      Kriz, Reno  and
+      Sedoc, Joao  and
+      Kustikova, Maria  and
+      Callison-Burch, Chris",
+    booktitle = "Proceedings of the 57th Conference of the Association for Computational Linguistics",
+    month = jul,
+    year = "2019",
+    address = "Florence, Italy",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/P19-1365",
+}
+```
+
+# Diverse Candidates Used in our Analyses
+TODO
+
+# Rerunning Open-ended Dialog Experiments
+The chitchat model used in the paper was based on an older fork of OpenNMT-py. Please clone the following repo [https://github.com/rekriz11/OpenNMT-py](https://github.com/rekriz11/OpenNMT-py). Our model weights can be downloaded at TODO, although any OpenNMT Seq2Seq saved model should work. 
+
+## Instructions for generating canadidates.
+Set the vars at the top of `run_experiments.sh` appropriately to refer to where OpenNMT-py and your model weights are stored.
 Run
 ```
 ./run_experiments.sh 100
