@@ -1,6 +1,6 @@
 # Code for "Comparison of Diverse Decoding Methods from Conditional Language Models"
 
-Please cite:
+Please cite the following [paper](https://arxiv.org/pdf/1904.02767.pdf):
 ```
 @inproceedings{ippolito-etal-2019-comparison,
     title = "Comparison of Diverse Decoding Methods from Conditional Language Models",
