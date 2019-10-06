@@ -68,6 +68,6 @@ This section is still in progress. Contact us if you need it imminently.
 Make sure a bert-as-service instance is running (see above section), and then run 
 ```
 python analyze_diversity.py -dir all_experiments/dialog/100to10decodes_withClustering
-python analyze_diversity.py -dir experiments/100to10decodes_withTopScores
+python analyze_diversity.py -dir all_experiments/dialog/100to10decodes_withTopScores
 ```
 Each of these commands will create a results.csv file in the specified directory with distinct-1, distinct-2, entropy-2, entropy-4, and other statstics about the outputs.
