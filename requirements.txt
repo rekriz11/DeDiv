@@ -3,3 +3,8 @@ bert-serving-server
 bert-serving-client
 nltk
 mosestokenizer
+sklearn
+configargparse
+torch
+torchvision
+torchtext
