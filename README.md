@@ -24,7 +24,7 @@ The paper evaluates on two domains, open-ended dialog and image captioning. The 
 Follow the instructions below to rerun inference and reproduce these JSON files.
 
 # Rerunning Open-ended Dialog Experiments
-The chitchat model used in the paper was based on an older fork of OpenNMT-py. Please clone the following repo [https://github.com/rekriz11/OpenNMT-py](https://github.com/rekriz11/OpenNMT-py). Our model weights can be downloaded [here](https://www.seas.upenn.edu/~rekriz/opensutitles_model.pt), although any OpenNMT Seq2Seq saved model should work. 
+The chitchat model used in the paper was based on an older fork of OpenNMT-py. Please clone the following repo [https://github.com/rekriz11/OpenNMT-py](https://github.com/rekriz11/OpenNMT-py). Our model weights can be downloaded [here](https://drive.google.com/file/d/16CDw7NS7D4eEq57dPZm2dxSUiBfi0Vpr/view?usp=sharing), although any OpenNMT Seq2Seq saved model should work. 
 
 ## Instructions for generating canadidates.
 
